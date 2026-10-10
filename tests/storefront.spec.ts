@@ -40,8 +40,9 @@ test('unverified claims and missing photos are visibly marked, never asserted', 
   await expect(claims.first()).toBeVisible();
   for (const claim of await claims.all()) await expect(claim).toHaveAttribute('data-confirmed', 'false');
   await expect(page.getByText('Licence no. to add')).toBeVisible();
-  await expect(page.locator('[data-placeholder="photo"]').first()).toBeVisible();
   await expect(page.getByText('Sample prices').first()).toBeVisible();
+  await page.goto('/our-story');
+  await expect(page.getByText('Family story to be supplied')).toBeVisible();
 });
 
 test('desktop navigation changes route, title, active state and focus', async ({ page }) => {

@@ -1,13 +1,19 @@
 # Content status: what is real, what is sample, what is missing
 
 Every unconfirmed item on the site is visibly marked with a dashed "placeholder" chip
-(`PendingChip`) or a "Photo to be supplied" panel (`PhotoSlot`). Nothing below is invented.
+(`PendingChip`). Photo slots without a photo render a "Photo to be supplied" panel (`PhotoSlot`);
+all slots are currently filled. Nothing below is invented.
+
+Photo placement: Home hero = laddu rolling; Home kitchen story = besan in kadai; Faral hero = chakli
+press; Faral "Made with love" = gift box packing; Our Story = modak filling. The WhatsApp band uses
+the Festive Thali product photo. The supplied `Modak` subfolder was empty.
 
 ## Supplied by the client
 
 | Item | Source | Where it lives |
 | --- | --- | --- |
 | 30 product photos and names (English and Marathi) | Product sheet, received 2026-10-10 (`assets-src/photos/product-sheet.webp`) | `public/images/products/*.webp`, `src/data/products.ts` |
+| 5 editorial photos (laddu rolling, besan in kadai, chakli press, gift box packing, modak filling) | Received 2026-10-10 (`assets-src/photos/editorial/`) | `public/images/editorial/` (960 and 1600 px WebP), slots in `src/config/media.ts` |
 | Page composition, palette, typography direction, section copy | Two approved prototypes (homepage, Faral page) | Components and pages |
 
 The product sheet is 1536 x 1024, so each photo is only about 250 x 150 px. They were cropped and
@@ -37,9 +43,6 @@ family's own wording.
 
 | Needed | Config location |
 | --- | --- |
-| Hero photos for Home and Faral (landscape, 1600 px+) | `src/config/media.ts` (`homeHero`, `faralHero`) |
-| Kitchen photos: hands rolling laddus, shaping chakli (1200 px+) | `media.ts` (`homeKitchen`, `faralKitchen`) |
-| Family or kitchen photo for Our Story | `media.ts` (`storyFamily`) |
 | Family story in their own words | `src/pages/StoryPage.tsx` |
 | WhatsApp number (digits only, with 91) | `business.whatsappNumber` |
 | Email, kitchen location, delivery areas, order timings | `business.email`, `address`, `deliveryInformation` / `serviceArea`, `orderingHours` |
@@ -55,7 +58,6 @@ contact form. Until then they compose the message and offer "Copy message" only.
 
 ## Deliberate differences from the prototypes
 
-- Hero and kitchen photos are placeholders until the client sends them (agreed 2026-10-10).
 - The "Freshly made after your order" seal, "Bestseller" ribbon, "5.0 on Google", "5000+ families",
   "Pan India", "FSSAI Licensed" and "No preservatives" statements are unverified, so they are either
   omitted or shown as labelled placeholders.

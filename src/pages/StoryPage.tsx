@@ -34,7 +34,7 @@ export function StoryPage() {
           </div>
         </div>
         <div className="aspect-[4/3] overflow-hidden rounded-card border border-line">
-          <PhotoSlot photo={media.storyFamily.photo} need={media.storyFamily.need} />
+          <PhotoSlot priority photo={media.storyFamily.photo} need={media.storyFamily.need} sizes="(min-width: 64rem) 37rem, 100vw" />
         </div>
       </Container>
     </section>

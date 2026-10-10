@@ -19,6 +19,8 @@ export interface ProductImage {
   height: number;
   /** CSS object-position, for photos whose subject sits off-centre in a cropped frame. */
   focus?: string;
+  /** Responsive candidates, e.g. "/a-960.webp 960w, /a-1600.webp 1600w". */
+  srcSet?: string;
 }
 
 export interface ProductVariant {

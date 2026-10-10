@@ -11,21 +11,23 @@ export function PendingChip({ children = 'To be confirmed', className, tone = 'l
   )}>{children}</span>;
 }
 
-interface PhotoSpec { src: string; alt: string; width: number; height: number; focus?: string }
+interface PhotoSpec { src: string; alt: string; width: number; height: number; focus?: string; srcSet?: string }
 
 /**
  * Renders a supplied photo, or an honest placeholder describing the photo still needed.
  * Swap a placeholder for a real image in src/config/media.ts; no layout change is required.
  */
-export function PhotoSlot({ photo, need, className, imgClassName, priority = false }: {
+export function PhotoSlot({ photo, need, className, imgClassName, priority = false, sizes }: {
   photo: PhotoSpec | null;
   need: string;
   className?: string;
   imgClassName?: string;
   priority?: boolean;
+  /** Rendered width hint for srcSet, e.g. "(min-width: 64rem) 56vw, 100vw". */
+  sizes?: string;
 }) {
   if (photo) {
-    return <img src={photo.src} alt={photo.alt} width={photo.width} height={photo.height}
+    return <img src={photo.src} srcSet={photo.srcSet} sizes={photo.srcSet ? sizes ?? '100vw' : undefined} alt={photo.alt} width={photo.width} height={photo.height}
       loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : undefined} decoding="async"
       style={photo.focus ? { objectPosition: photo.focus } : undefined}
       className={cn('h-full w-full object-cover', className, imgClassName)} />;

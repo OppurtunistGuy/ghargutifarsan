@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { business, isWhatsAppConfigured } from './business';
 import { media } from './media';
@@ -22,9 +23,13 @@ describe('Unconfirmed business information', () => {
     expect(isWhatsAppConfigured('919876543210')).toBe(true);
   });
 
-  it('only uses supplied editorial photos; missing ones stay placeholders', () => {
-    expect(media.homeHero.photo).toBeNull();
-    expect(media.faralHero.photo).toBeNull();
+  it('points every editorial photo at a file that exists, with alt text', () => {
+    for (const slot of Object.values(media)) {
+      if (!slot.photo) continue;
+      expect(slot.photo.alt.length).toBeGreaterThan(10);
+      const files = [slot.photo.src, ...(slot.photo.srcSet?.split(',').map((entry) => entry.trim().split(' ')[0]!) ?? [])];
+      for (const file of files) expect(existsSync(`public${file}`), file).toBe(true);
+    }
   });
 });
 
@@ -34,6 +39,7 @@ describe('Catalogue', () => {
     expect(new Set(products.map((item) => item.id)).size).toBe(products.length);
     for (const item of products) {
       expect(item.image?.src).toBe(`/images/products/${item.id}.webp`);
+      expect(existsSync(`public${item.image?.src}`)).toBe(true);
       expect(item.variants.length).toBeGreaterThan(0);
       expect(item.availability).toBe('unconfirmed');
       expect(item.ingredients).toBeNull();
