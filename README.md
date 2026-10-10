@@ -1,6 +1,8 @@
 # Gharguti Farsan
 
-Phase 1 foundation for a Maharashtrian sweets and Faral storefront. React 19, TypeScript, Vite, Tailwind CSS v4, React Router and Zustand, with a local shadcn/ui-style Button and Lucide icons.
+Storefront for Gharguti Farsan, a home-run Maharashtrian sweets and faral business: Home, Laddus & Modak, Faral, product details, Our Story, Contact and a persistent cart that turns into a WhatsApp order message. React 19, TypeScript, Vite, Tailwind CSS v4, React Router and Zustand, with a local shadcn/ui-style Button and Lucide icons.
+
+**Before launch, read [docs/content-status.md](docs/content-status.md):** prices are prototype samples, several photos and all contact details are still placeholders.
 
 ## Branch workflow
 
@@ -28,33 +30,33 @@ CHROMIUM_PATH=/usr/bin/chromium npm run test:e2e
 npm run preview    # serve the production build
 ```
 
+Visual QA captures (dev server running): `node scripts/screenshots.mjs <outDir> [baseUrl] [routes] [widths]`. Product photos are cut from the client's product sheet with `python scripts/crop-product-sheet.py assets-src/photos/product-sheet.webp public/images/products` (needs Pillow).
+
 Browser tests use installed Chromium when `CHROMIUM_PATH` is supplied. On other machines, install the Playwright browser once with `npx playwright install chromium`, then run `npm run test:e2e`. Screenshots and traces are generated under ignored `test-results/`.
 
 ## Structure
 
 | Directory | Responsibility |
 | --- | --- |
-| `src/app/` | Router, shared layout, page titles and navigation focus |
-| `src/components/` | Shared container, branding, header, footer and headings |
+| `src/app/` | Router, shared layout, page titles/meta, navigation focus, scroll reveal |
+| `src/pages/` | Home, Laddus, Faral, Product, Our Story, Contact, Cart, Not found |
+| `src/components/` | Header, footer, hero, product cards, cart drawer, trust strip, placeholders |
+| `src/lib/` | Cart summary, WhatsApp message and link building |
 | `src/components/ui/` | Locally owned Button and class utilities |
 | `src/styles/` | Tailwind v4 theme, typography and accessibility defaults |
-| `src/config/` | Business information and navigation |
+| `src/config/` | Business details and claims (`business.ts`), editorial photo slots (`media.ts`), navigation |
 | `src/types/`, `src/data/` | Product types and single catalog source |
-| `src/stores/` | Zustand shopping state contract for Phase 4 |
-| `src/assets/`, `public/images/` | Approved assets (currently empty) |
+| `src/stores/` | Persistent cart and UI (drawer, toast) state |
+| `public/images/products/` | Product photos cropped from the client's sheet (`assets-src/photos/`) |
 | `tests/` | Browser checks and accessibility scans |
 | `docs/` | Phase status and outstanding inputs |
 
 ## Business configuration
 
-Edit `src/config/business.ts` with approved public information only. `null` means not supplied; claims and contact destinations stay hidden until configured. A WhatsApp number must be digits-only international format including its country code. Never put credentials in frontend files.
+Edit `src/config/business.ts` with approved public information only. `null` means not supplied and renders a visible placeholder. Each trust claim has `confirmed: false` until the client confirms it. A WhatsApp number must be digits-only international format including its country code; setting it enables sending from the cart and contact form. Set `pricesConfirmed: true` once real prices are entered. Never put credentials in frontend files.
 
-Edit `src/data/products.ts` with approved descriptions, images, ingredients, allergens, storage guidance and variants. Prices are integer paise; `null` is an unknown price, not zero. Product/variant availability is explicitly typed. Product names in the supplied document have been seeded; pack sizes, prices, images and availability have not been fabricated. Marathi catalog names are translations to review alongside final business copy.
+Edit `src/data/products.ts` for products, descriptions, prices (integer paise; `null` is unknown, never free), pack sizes, ingredients, allergens and storage. Editorial photos (heroes, kitchen) go in `src/config/media.ts`.
 
-## Phase boundaries
+## Status
 
-The shared shell and routes run now. Page bodies are clearly temporary collection/story/contact scaffolds. Homepage composition is Phase 2; Faral catalog and filters are Phase 3; product details, cart mutations/persistence and WhatsApp order messages are Phase 4. The empty bag is a route scaffold, not completed shopping functionality.
-
-No backend, credentials or payment service is required for this foundation. Production hosting must rewrite application routes to `index.html` for direct React Router navigation. No deployment has been performed.
-
-See [Phase 1 report](docs/phase-1.md) for validation and missing inputs.
+Phases 1 to 5 are implemented; see [docs/phase-1.md](docs/phase-1.md) and [docs/phases-2-5.md](docs/phases-2-5.md). No backend or payment service is used. Production hosting must rewrite application routes to `index.html`. No deployment has been performed.

@@ -1,9 +1,6 @@
 # Assets
 
-- `images/`: approved food and kitchen photography imported by components (Vite hashes these files).
-- `icons/`: approved brand marks and decorative SVGs.
-- `public/images/`: files needing stable public URLs.
+- `public/images/products/`: product photos cut from the client's product sheet (`assets-src/photos/product-sheet.webp`) by `scripts/crop-product-sheet.py`.
+- Editorial photos (heroes, kitchen, story) are configured in `src/config/media.ts`; until supplied they render labelled placeholders.
 
-No food photography, logo artwork, or prototype images were received during Phase 1. Do not substitute generated photography or silently source unrelated stock images. Until approved images are supplied, product image fields remain `null`.
-
-Typography is self-hosted through the locked `@fontsource/mukta` and `@fontsource/fraunces` packages. Their SIL Open Font License texts are in `public/licenses/`. The font pair and design tokens are provisional until the two approved prototype images can be reviewed.
+Do not substitute generated or unrelated stock photography. Typography is self-hosted (Mukta, Noto Serif, Noto Serif Devanagari, Kalam); licences are in `public/licenses/`.

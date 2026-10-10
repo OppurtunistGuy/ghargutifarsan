@@ -1,44 +1,104 @@
 @import "tailwindcss";
 
-/* Provisional tokens from the requirements; reconcile with prototypes when supplied. */
+/*
+  Tokens sampled from the two client-approved prototypes (homepage and Faral),
+  reconciled with the requirement palette (#F7F0E3, #EAD9BC, #754831, #B78A45).
+  Gold is decorative only: it never carries text, it fails contrast on cream.
+*/
 @theme {
   --color-cream: #f7f0e3;
   --color-parchment: #ead9bc;
-  --color-paper: #fffaf1;
-  --color-brown: #754831;
-  --color-ink: #422d23;
-  --color-muted: #705d4e;
+  --color-paper: #fffaf2;
+  --color-sand: #f1e4cc;
+  --color-brown: #7b3b18;
+  --color-brown-hover: #642f12;
+  --color-saddle: #85491c;
+  --color-band: #57250e;
+  --color-band-ink: #f7e9d2;
+  --color-ink: #3e2418;
+  --color-muted: #6b4f40;
   --color-gold: #b78a45;
-  --color-maroon: #672d34;
-  --color-line: #d5c2a6;
-  --font-sans: "Mukta", sans-serif;
-  --font-editorial: "Fraunces", Georgia, serif;
-  --radius-card: 1rem;
+  --color-maroon: #7f2d14;
+  --color-line: #e3d0b0;
+
+  --font-sans: "Mukta", system-ui, sans-serif;
+  /* Noto Serif and Noto Serif Devanagari share one design, so mixed-script headings sit on the same rhythm. */
+  --font-serif: "Noto Serif Variable", "Noto Serif Devanagari Variable", Georgia, serif;
+  --font-marathi: "Noto Serif Devanagari Variable", "Noto Serif Variable", serif;
+  --font-hand: "Kalam", "Noto Serif Devanagari Variable", cursive;
+
+  /* Shape rule: cards 0.75rem; card actions 0.375rem; page CTAs, filters and chips are full pills. */
+  --radius-card: 0.75rem;
   --radius-control: 0.375rem;
-  --shadow-card: 0 6px 24px rgb(66 45 35 / 0.06);
-  --spacing-gutter: clamp(1.25rem, 4vw, 3.5rem);
-  --spacing-section: clamp(3rem, 7vw, 6rem);
+  --shadow-card: 0 1px 2px rgb(87 37 14 / 0.06), 0 10px 28px -12px rgb(87 37 14 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(87 37 14 / 0.08), 0 18px 36px -14px rgb(87 37 14 / 0.28);
+  --spacing-gutter: clamp(1rem, 4vw, 3rem);
+  --spacing-section: clamp(3.5rem, 7vw, 6rem);
 }
 
 @layer base {
-  html { color-scheme: light; }
-  body { margin: 0; background: var(--color-cream); color: var(--color-ink); font-family: var(--font-sans); font-size: 1.125rem; line-height: 1.65; }
+  html { color-scheme: light; scroll-padding-top: 1.5rem; }
+  body { margin: 0; background: var(--color-cream); color: var(--color-ink); font-family: var(--font-sans); font-size: 1.0625rem; line-height: 1.6; -webkit-font-smoothing: antialiased; }
   button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
   button:not(:disabled), a { touch-action: manipulation; }
-  :focus-visible { outline: 3px solid var(--color-maroon); outline-offset: 5px; }
+  :focus-visible { outline: 3px solid var(--color-maroon); outline-offset: 3px; }
   ::selection { background: var(--color-parchment); color: var(--color-ink); }
-  h1, h2, h3, p { margin: 0; }
-  [lang="mr"] { line-height: 1.55; }
+  h1, h2, h3, h4, p, figure { margin: 0; }
+  img { max-width: 100%; }
+  /* Devanagari matras and conjuncts need more vertical room than Latin. */
+  [lang="mr"] { line-height: 1.5; }
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
   }
 }
 
 @layer components {
-  .page-container { width: 100%; max-width: 80rem; margin-inline: auto; padding-inline: var(--spacing-gutter); }
-  .nav-link { display: inline-flex; align-items: center; min-height: 44px; padding: 0.375rem 0.125rem; color: var(--color-muted); border-bottom: 2px solid transparent; }
-  .nav-link:hover { color: var(--color-brown); }
-  .nav-link[aria-current="page"] { color: var(--color-brown); border-color: var(--color-brown); }
+  .page-container { width: 100%; max-width: 78rem; margin-inline: auto; padding-inline: var(--spacing-gutter); }
+
+  .nav-link { position: relative; display: inline-flex; align-items: center; min-height: 44px; padding-inline: 0.25rem; font-family: var(--font-serif); font-size: 1rem; color: var(--color-ink); transition: color 0.2s ease; }
+  .nav-link:hover { color: var(--color-maroon); }
+  .nav-link[aria-current="page"] { color: var(--color-maroon); }
+  .nav-link[aria-current="page"]::after { content: ""; position: absolute; left: 50%; bottom: 4px; width: 1.25rem; height: 2px; translate: -50% 0; border-radius: 2px; background: var(--color-gold); }
+
   .footer-link { display: inline-flex; align-items: center; min-height: 44px; text-underline-offset: 4px; }
   .footer-link:hover { text-decoration: underline; }
+
+  /* Hairline + diamond flourish used either side of Marathi section titles (CSS only, no drawn artwork). */
+  .ornament { display: inline-flex; align-items: center; gap: 0.375rem; color: var(--color-gold); }
+  .ornament::before { content: ""; width: clamp(1.25rem, 4vw, 2.75rem); height: 1px; background: currentColor; }
+  .ornament::after { content: ""; width: 0.4rem; height: 0.4rem; rotate: 45deg; border: 1px solid currentColor; }
+  .ornament--end { flex-direction: row-reverse; }
+
+  /* Faint repeating texture on cream bands; purely decorative and pointer-transparent. */
+  .paper-texture { background-color: var(--color-cream); background-image: radial-gradient(rgb(183 138 69 / 0.09) 1px, transparent 1.2px); background-size: 22px 22px; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .cart-drawer[open] { animation: drawer-in 0.32s cubic-bezier(0.16, 1, 0.3, 1); }
+    .cart-drawer[open]::backdrop { animation: fade-in 0.32s ease; }
+    .toast-in { animation: toast-in 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+  }
+
+  .reveal { opacity: 1; }
+  @media (prefers-reduced-motion: no-preference) {
+    .js-reveal .reveal { opacity: 0; translate: 0 18px; transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), translate 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+    .js-reveal .reveal.is-visible { opacity: 1; translate: 0 0; }
+  }
 }
+
+@keyframes drawer-in { from { translate: 100% 0; } to { translate: 0 0; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes toast-in { from { opacity: 0; translate: 0 12px; } to { opacity: 1; translate: 0 0; } }
+
+/* Hero: photo feathers into the cream page on wide layouts (prototype treatment). */
+@media (min-width: 64rem) {
+  .hero-media { mask-image: linear-gradient(to right, transparent 0%, #000 24%); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-copy > * { animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+  .hero-copy > :nth-child(2) { animation-delay: 0.08s; }
+  .hero-copy > :nth-child(3) { animation-delay: 0.16s; }
+  .hero-copy > :nth-child(4) { animation-delay: 0.24s; }
+  .hero-media { animation: fade-in 1s ease both; }
+}
+@keyframes rise { from { opacity: 0; translate: 0 14px; } to { opacity: 1; translate: 0 0; } }

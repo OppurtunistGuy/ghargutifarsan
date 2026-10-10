@@ -5,7 +5,7 @@ export default defineConfig({
   fullyParallel: false,
   reporter: 'list',
   use: {
-    baseURL: 'http://127.0.0.1:5173',
+    baseURL: 'http://127.0.0.1:5183',
     headless: true,
     launchOptions: process.env.CHROMIUM_PATH
       ? { executablePath: process.env.CHROMIUM_PATH }
@@ -13,8 +13,8 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   webServer: {
-    command: 'npm run dev -- --port 5173 --strictPort',
-    url: 'http://127.0.0.1:5173',
+    command: 'npm run dev -- --port 5183 --strictPort --host 127.0.0.1',
+    url: 'http://127.0.0.1:5183',
     reuseExistingServer: !process.env.CI,
   },
 });
