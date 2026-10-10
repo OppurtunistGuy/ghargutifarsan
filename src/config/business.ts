@@ -14,7 +14,11 @@ export interface BusinessConfig {
   marathiName: string;
   currency: 'INR';
   locale: 'en-IN';
-  /** Digits only, international format with country code and no '+', e.g. 9198xxxxxxxx. */
+  /**
+   * The dedicated WhatsApp Business number the assistant runs on (docs/whatsapp-assistant.md),
+   * never the owner's personal number. Digits only, international format with country code and
+   * no '+', e.g. 9198xxxxxxxx.
+   */
   whatsappNumber: string | null;
   email: string | null;
   address: string | null;
@@ -31,13 +35,18 @@ export interface BusinessConfig {
   claims: Record<ClaimId, Claim>;
 }
 
+// The business number can be supplied at build time (VITE_WHATSAPP_NUMBER in the host's environment
+// or .env.local) so it switches the WhatsApp buttons on without a code change. Under plain Node
+// (the assistant's local scripts) import.meta.env does not exist, hence the optional access.
+const configuredNumber = (import.meta as unknown as { env?: Record<string, string | undefined> }).env?.VITE_WHATSAPP_NUMBER;
+
 // Populate only with approved business details. Public configuration: never put secrets here.
 export const business: BusinessConfig = {
   name: 'Gharguti Farsan',
   marathiName: 'घरगुती फरसाण',
   currency: 'INR',
   locale: 'en-IN',
-  whatsappNumber: null,
+  whatsappNumber: configuredNumber?.replace(/\D/g, '') || null,
   email: null,
   address: null,
   serviceArea: null,

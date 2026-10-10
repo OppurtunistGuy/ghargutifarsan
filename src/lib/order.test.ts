@@ -23,7 +23,7 @@ describe('Order summary and WhatsApp message', () => {
     expect(message).toContain('1. Bhajani Chakli (500 g) x 2: ₹690');
     expect(message).toContain('2. Ukadiche Modak (piece) x 11: ₹385');
     expect(message).toContain('3. Chivda Mix x 1: price to be confirmed');
-    expect(message).toContain('Estimated total: ₹1,075 + 1 item to be priced');
+    expect(message).toContain('Estimated total (sample prices): ₹1,075 + 1 item to be priced');
     expect(message).toContain('Please confirm prices, availability and delivery.');
     expect(message).toContain('Name: Asha');
     expect(message).toContain('Note: Needed by Friday');
@@ -33,7 +33,7 @@ describe('Order summary and WhatsApp message', () => {
     const message = buildOrderMessage(summarizeBag(lines.slice(0, 1)));
     expect(message).not.toContain('Name:');
     expect(message).not.toContain('Note:');
-    expect(message).toContain('Estimated total: ₹690');
+    expect(message).toContain('Estimated total (sample prices): ₹690');
     expect(message).not.toContain('to be priced');
   });
 

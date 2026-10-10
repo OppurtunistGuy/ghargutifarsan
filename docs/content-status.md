@@ -44,7 +44,7 @@ family's own wording.
 | Needed | Config location |
 | --- | --- |
 | Family story in their own words | `src/pages/StoryPage.tsx` |
-| WhatsApp number (digits only, with 91) | `business.whatsappNumber` |
+| Dedicated WhatsApp Business number (digits only, with 91), plus Meta Business access and the owner's personal number for alerts ([whatsapp-assistant.md](whatsapp-assistant.md)) | `business.whatsappNumber`; secrets in Vercel environment variables |
 | Email, kitchen location, delivery areas, order timings | `business.email`, `address`, `deliveryInformation` / `serviceArea`, `orderingHours` |
 | FSSAI licence number | `business.fssaiNumber`, then `claims.fssai.confirmed` |
 | Google listing link | `business.googleReviewUrl`, then `claims.googleReviews.confirmed` |

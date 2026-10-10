@@ -139,7 +139,7 @@ test('cart: add, change quantity, persist across reload, build the WhatsApp mess
   const message = page.locator('[data-order-message]');
   await expect(message).toContainText('1. Bhajani Chakli (500 g) x 2: ₹690');
   await expect(message).toContainText('2. Chivda Mix x 1: price to be confirmed');
-  await expect(message).toContainText('Estimated total: ₹690 + 1 item to be priced');
+  await expect(message).toContainText('Estimated total (sample prices): ₹690 + 1 item to be priced');
   await page.getByLabel('Your name').fill('Asha');
   await expect(message).toContainText('Name: Asha');
   await expect(page.getByRole('button', { name: 'Send on WhatsApp' })).toBeDisabled();

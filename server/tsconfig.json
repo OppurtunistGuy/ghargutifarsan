@@ -1,0 +1,11 @@
+{
+  // The server runs under Node's type stripping (bot:dev, bot:chat), which only
+  // accepts erasable TypeScript syntax: no enums, namespaces or parameter properties.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "erasableSyntaxOnly": true,
+    "lib": ["ES2022", "DOM"],
+    "types": ["node"]
+  },
+  "include": ["."]
+}

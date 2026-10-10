@@ -28,6 +28,9 @@ The npm cache uses `/workspace/.npm-cache` for the cloud environment. Outside th
 npm run check       # ESLint, unit tests, TypeScript and production build
 CHROMIUM_PATH=/usr/bin/chromium npm run test:e2e
 npm run preview    # serve the production build
+npm run bot:chat   # chat with the WhatsApp assistant in the terminal (no Meta account)
+npm run bot:dev    # dry-run WhatsApp webhook on http://localhost:8787/api/whatsapp
+npm run build:vercel  # production build + Vercel Build Output (storefront + /api/whatsapp)
 ```
 
 Visual QA captures (dev server running): `node scripts/screenshots.mjs <outDir> [baseUrl] [routes] [widths]`. Product photos are cut from the client's product sheet with `python scripts/crop-product-sheet.py assets-src/photos/product-sheet.webp public/images/products` (needs Pillow).
@@ -48,15 +51,16 @@ Browser tests use installed Chromium when `CHROMIUM_PATH` is supplied. On other 
 | `src/types/`, `src/data/` | Product types and single catalog source |
 | `src/stores/` | Persistent cart and UI (drawer, toast) state |
 | `public/images/products/` | Product photos cropped from the client's sheet (`assets-src/photos/`) |
+| `server/` | WhatsApp assistant (Cloud API webhook): conversation, owner alerts and commands, Vercel function |
 | `tests/` | Browser checks and accessibility scans |
 | `docs/` | Phase status and outstanding inputs |
 
 ## Business configuration
 
-Edit `src/config/business.ts` with approved public information only. `null` means not supplied and renders a visible placeholder. Each trust claim has `confirmed: false` until the client confirms it. A WhatsApp number must be digits-only international format including its country code; setting it enables sending from the cart and contact form. Set `pricesConfirmed: true` once real prices are entered. Never put credentials in frontend files.
+Edit `src/config/business.ts` with approved public information only. `null` means not supplied and renders a visible placeholder. Each trust claim has `confirmed: false` until the client confirms it. The WhatsApp number is the dedicated business number the assistant runs on (never a personal number), digits-only international format including its country code; setting it enables sending from the cart and contact form. The assistant answers from this file too, so unknown facts stay `null` rather than guessed. Set `pricesConfirmed: true` once real prices are entered. Never put credentials in frontend files.
 
 Edit `src/data/products.ts` for products, descriptions, prices (integer paise; `null` is unknown, never free), pack sizes, ingredients, allergens and storage. Editorial photos (heroes, kitchen) go in `src/config/media.ts`.
 
 ## Status
 
-Phases 1 to 5 are implemented; see [docs/phase-1.md](docs/phase-1.md) and [docs/phases-2-5.md](docs/phases-2-5.md). No backend or payment service is used. Production hosting must rewrite application routes to `index.html`. No deployment has been performed.
+Phases 1 to 5 are implemented; see [docs/phase-1.md](docs/phase-1.md) and [docs/phases-2-5.md](docs/phases-2-5.md). No payment service is used. The only backend is the WhatsApp assistant webhook (`server/`, see [docs/whatsapp-assistant.md](docs/whatsapp-assistant.md)): customers order by chatting with it on a dedicated business number, and the owner's personal number stays a server secret. Hosting target is Vercel (`vercel.json`, `scripts/build-vercel.mjs`), which also rewrites application routes to `index.html`. No deployment has been performed.

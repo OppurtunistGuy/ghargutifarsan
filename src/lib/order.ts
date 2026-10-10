@@ -54,9 +54,11 @@ export function buildOrderMessage(summary: BagSummary, details: OrderDetails = {
   });
   const name = details.name?.trim();
   const note = details.note?.trim();
+  // While the catalogue shows sample prices, the message says so: the family confirms the real price.
+  const label = business.pricesConfirmed ? 'Estimated total' : 'Estimated total (sample prices)';
   const total = summary.unpricedLineCount > 0
-    ? `Estimated total: ${formatPrice(summary.estimatedTotalPaise)} + ${summary.unpricedLineCount} item${summary.unpricedLineCount === 1 ? '' : 's'} to be priced`
-    : `Estimated total: ${formatPrice(summary.estimatedTotalPaise)}`;
+    ? `${label}: ${formatPrice(summary.estimatedTotalPaise)} + ${summary.unpricedLineCount} item${summary.unpricedLineCount === 1 ? '' : 's'} to be priced`
+    : `${label}: ${formatPrice(summary.estimatedTotalPaise)}`;
   return [
     `Namaskar ${business.name}, I would like to place an order:`,
     '',
