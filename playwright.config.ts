@@ -20,9 +20,9 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   projects: [
-    // The site as it ships today: no business number, WhatsApp buttons disabled.
+    // The site as it ships, with the business number from src/config/business.ts.
     { name: 'storefront', testIgnore: /whatsapp-configured/, use: { baseURL: 'http://127.0.0.1:5183' } },
-    // The same site built with a business number, as after VITE_WHATSAPP_NUMBER is set.
+    // VITE_WHATSAPP_NUMBER overriding that number at build time.
     { name: 'whatsapp-configured', testMatch: /whatsapp-configured\.spec\.ts/, use: { baseURL: 'http://127.0.0.1:5184' } },
   ],
   webServer: [

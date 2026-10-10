@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-// Runs against the dev server started with VITE_WHATSAPP_NUMBER=919800000000 (playwright.config.ts).
+// Runs against the dev server started with VITE_WHATSAPP_NUMBER=919800000000 (playwright.config.ts),
+// proving the build-time override replaces the number in src/config/business.ts everywhere.
 const NUMBER = '919800000000';
 
 test.beforeEach(async ({ page, context }) => {

@@ -12,24 +12,31 @@ const routes = [
   ['/missing-page', 'हे पान सापडले नाही'],
 ] as const;
 
+const WHATSAPP = '918177944699';
+
 const cartButton = (page: Page) => page.getByRole('banner').getByRole('button', { name: /^Cart, \d+ items?$/ });
 
 async function settle(page: Page) {
   await page.evaluate(() => document.fonts.ready);
 }
 
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page, context }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
+  // Never load the real wa.me in tests; just record that the browser was sent there.
+  await context.route('https://wa.me/**', (route) => route.fulfill({ status: 200, contentType: 'text/html', body: '<title>wa.me</title>' }));
 });
 
-test('every route renders without errors or unconfigured contact links', async ({ page }) => {
+test('every route renders without errors; the only contact links go to the business WhatsApp', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   for (const [path, heading] of routes) {
     const response = await page.goto(path);
     expect(response?.status()).toBe(200);
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(heading);
-    await expect(page.locator('a[href*="wa.me"], a[href^="mailto:"], a[href^="tel:"]')).toHaveCount(0);
+    await expect(page.locator('a[href^="mailto:"], a[href^="tel:"]')).toHaveCount(0);
+    for (const link of await page.locator('a[href*="wa.me"]').all()) {
+      expect(await link.getAttribute('href')).toMatch(new RegExp(`^https://wa[.]me/${WHATSAPP}([?]|$)`));
+    }
   }
   expect(errors).toEqual([]);
 });
@@ -142,8 +149,11 @@ test('cart: add, change quantity, persist across reload, build the WhatsApp mess
   await expect(message).toContainText('Estimated total (sample prices): ₹690 + 1 item to be priced');
   await page.getByLabel('Your name').fill('Asha');
   await expect(message).toContainText('Name: Asha');
-  await expect(page.getByRole('button', { name: 'Send on WhatsApp' })).toBeDisabled();
-  await expect(page.getByText('WhatsApp number to be added')).toBeVisible();
+  const send = page.getByRole('link', { name: /Send on WhatsApp/ });
+  const href = (await send.getAttribute('href')) ?? '';
+  expect(href.startsWith(`https://wa.me/${WHATSAPP}?text=`)).toBe(true);
+  expect(new URL(href).searchParams.get('text')).toBe(await message.innerText());
+  await expect(page.getByText('WhatsApp number to be added')).toHaveCount(0);
 
   await page.getByRole('button', { name: 'Remove Chivda Mix from cart' }).click();
   await expect(page.getByRole('main').locator('[data-cart-line]')).toHaveCount(1);
@@ -163,20 +173,23 @@ test('product page adds the chosen quantity', async ({ page }) => {
   await expect(page.getByText('To be supplied').first()).toBeVisible();
 });
 
-test('contact form validates and prepares a WhatsApp enquiry without sending', async ({ page }) => {
+test('contact form validates, then opens WhatsApp with the enquiry', async ({ page }) => {
   await page.goto('/contact');
-  await page.getByRole('button', { name: 'Prepare message' }).click();
+  await expect(page.locator('[data-contact="WhatsApp"]')).toContainText('+91 81779 44699');
+  await page.getByRole('button', { name: 'Send on WhatsApp' }).click();
   await expect(page.getByText('Please enter your name.')).toBeVisible();
   await expect(page.getByLabel('Your name')).toBeFocused();
   await page.getByLabel('Your name').fill('Ravi');
   await page.getByLabel('Your message').fill('Short');
-  await page.getByRole('button', { name: 'Prepare message' }).click();
+  await page.getByRole('button', { name: 'Send on WhatsApp' }).click();
   await expect(page.getByText(/at least 10 characters/)).toBeVisible();
   await page.getByLabel('Your message').fill('50 return gift packs for a pooja on Sunday');
-  const popup = page.waitForEvent('popup', { timeout: 1000 }).catch(() => null);
-  await page.getByRole('button', { name: 'Prepare message' }).click();
+  const popup = page.waitForEvent('popup');
+  await page.getByRole('button', { name: 'Send on WhatsApp' }).click();
+  const url = new URL((await popup).url());
+  expect(url.origin + url.pathname).toBe(`https://wa.me/${WHATSAPP}`);
+  expect(url.searchParams.get('text')).toContain('50 return gift packs for a pooja on Sunday');
   await expect(page.locator('[data-enquiry-message]')).toContainText('50 return gift packs for a pooja on Sunday');
-  expect(await popup).toBeNull();
 });
 
 for (const width of [360, 390, 768, 1024, 1440]) {

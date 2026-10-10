@@ -131,8 +131,11 @@ then **subscribe to `messages`**. Send "hi" to the business number from another 
 
 ### 4. Website
 
-Set `VITE_WHATSAPP_NUMBER` in Vercel (or `.env.local` locally; see `.env.example`) to
-the **business** number, digits only with 91, and redeploy. That enables "Send on
+The website already uses the supplied number +91 81779 44699 (`src/config/business.ts`).
+If the assistant runs on a different, dedicated number, set `VITE_WHATSAPP_NUMBER` in Vercel
+(or `.env.local` locally; see `.env.example`) to it, digits only with 91, and redeploy.
+Before connecting the supplied number itself to the assistant, check Meta's current
+onboarding options for numbers already used in the WhatsApp or WhatsApp Business app. That enables "Send on
 WhatsApp" on the cart and contact pages; both open a chat with the assistant. The
 number works for the buttons even before the assistant is live: messages then simply
 arrive in the business WhatsApp. `tests/whatsapp-configured.spec.ts` checks the

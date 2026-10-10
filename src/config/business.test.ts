@@ -4,9 +4,10 @@ import { business, isWhatsAppConfigured } from './business';
 import { media } from './media';
 import { products, formatPrice, faralFilters, productsInCategories } from '../data/products';
 
-describe('Unconfirmed business information', () => {
-  it('does not publish contact details or verified claims by default', () => {
-    expect(business.whatsappNumber).toBeNull();
+describe('Business information', () => {
+  it('uses the supplied WhatsApp number and publishes no unconfirmed details or claims', () => {
+    expect(business.whatsappNumber).toBe('918177944699');
+    expect(isWhatsAppConfigured(business.whatsappNumber)).toBe(true);
     expect(business.email).toBeNull();
     expect(business.fssaiNumber).toBeNull();
     expect(business.googleReviewUrl).toBeNull();
